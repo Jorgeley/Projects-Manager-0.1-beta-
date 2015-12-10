@@ -29,18 +29,18 @@ import br.com.gpaengenharia.beans.Usuario;
 import br.com.gpaengenharia.classes.WebService;
 
 /**
- * Lê xml 'nomeArquivoXML' e grava em TreeMap <Projeto, List<Tarefa>> contendo
- * cada projeto com sua lista de tarefas
+ * reads xml 'nomeArquivoXML' and save on TreeMap <Projeto, List<Tarefa>>
+ * ...containing every project with its task list
  */
 public class Xml{
     protected static Context contexto;
-    //TreeMap de beans contendo cada projeto com sua lista de tarefas
+    //TreeMap of beans containing every project with its task list
     private TreeMap<Projeto,List<Tarefa>> projetos = new TreeMap<Projeto,List<Tarefa>>();
-    protected static String nomeArquivoXML;//nome do arquivo para ler o xml
-    //arquivo para gravar os XML's separados (Pessoais, Equipes, etc)
+    protected static String nomeArquivoXML;//name of the file
+    //file to save every XML (Personal, Team, etc)
     protected static FileOutputStream arquivoXML;
     private static Set<Integer> idsTarefas = new HashSet<Integer>();
-    //nome do arquivo XML para gravar as tarefas atualizadas pela sincronizaçao via webservice
+    //name of the file to save the updated tasks
     private static final String nomeArquivoXMLatualizadas = "tarefasAtualizadas.xml";
 
     public Xml(Context contexto){
@@ -52,15 +52,15 @@ public class Xml{
     }
 
     /**
-     * grava XML localmente caso haja tarefas novas e retorna os ID's das mesmas
+     * save local XML in case of new ones and returns its ID's
      * @param usuario
      * @param ultimaSincronizacao
-     * @return matriz de objetos com id's das tarefas atualizadas e flags de quais XML's atualizar
+     * @return matriz matrix of objects with id's of updated tasks and flags of which hast to update
      * @throws IOException
      */
     public static Vector<Vector<Object>> sincronizaXmlTudoWebservice(Usuario usuario, String ultimaSincronizacao) throws IOException {
         /**
-         * TODO nao deixar o webservice ser chamado sem restricao
+         * TODO do not let the webservice to be called without restrictions
          */
         WebService webService = new WebService();
         webService.setUsuario(usuario);
@@ -84,7 +84,7 @@ public class Xml{
     }
 
     /**
-     * Reescreve o arquivo XML passado como parametro, metodo chamado pelas classes filhas
+     * Rewrite the XML file, this method is called by children classes...
      * 'XmlTarefasPessoais', 'XmlTarefasEquipes', etc...
      * @param xml
      * @throws IOException
@@ -99,7 +99,7 @@ public class Xml{
         }
     }
 
-    /** abre o arquivo xml para leitura e retorna o TreeMap de beans <Projeto List<Tarefa>>
+    /** open the XML file for reading and returns the TreeMap of beans <Projeto List<Tarefa>>
      * @return TreeMap Projeto(bean), ListTarefa(bean) */
     public TreeMap<Projeto, List<Tarefa>> leXmlProjetosTarefas(){
         XmlPullParserFactory pullParserFactory;
@@ -116,26 +116,26 @@ public class Xml{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return this.projetos;//retorna o TreeMap de beans
+        return this.projetos;//returns the TreeMap of beans
     }
 
-    /**para cada node do Xml, adiciona no TreeMap de beans <Projeto List<Tarefa>>
+    /**for every node of Xml, add on TreeMap of beans <Projeto List<Tarefa>>
      * @param parser
      * @throws XmlPullParserException,IOException */
     private void parseXML(XmlPullParser parser) throws XmlPullParserException,IOException{
-        //lista de beans Tarefa node de cada projeto no TreeMap
+        //beans list of Task node for every project in TreeMap
         List<Tarefa> tarefas = new ArrayList<Tarefa>();
         int tipoEvento = parser.getEventType();
         Projeto projetoAtual = null;
         idsTarefas.clear();
         Set<String> tagsProjeto = new HashSet<String>(Arrays.asList("nome", "equipe", "responsavel"));
         Set<String> tagsTarefa = new HashSet<String>(Arrays.asList("nome", "responsavel", "descricao", "comentarios", "vencimento", "status"));
-        //enquanto não chega no fim do documento xml...
+        //while do not reach the end of file...
         while (tipoEvento != XmlPullParser.END_DOCUMENT){
             String nomeNode = parser.getName();
             switch (tipoEvento){
-                case XmlPullParser.START_TAG: //se é inicio de nova tag no xml...
-                    if (nomeNode.equals("projeto")) {//...se tag é projeto...
+                case XmlPullParser.START_TAG: //if is a begin of a new tag of the XML...
+                    if (nomeNode.equals("projeto")) {//...if tag is project...
                         projetoAtual = new Projeto(Parcel.obtain());
                         projetoAtual.setId(Integer.valueOf(parser.getAttributeValue(0)));
                         parser.nextTag();
@@ -163,7 +163,7 @@ public class Xml{
                             nomeNode = parser.getName();
                         }
                     }
-                    if (nomeNode.equals("tarefa")) {//...se tag é tarefa...
+                    if (nomeNode.equals("tarefa")) {//...if tag is task...
                         Tarefa tarefaAtual = new Tarefa(Parcel.obtain());
                         tarefaAtual.setId(Integer.valueOf(parser.getAttributeValue(0)));
                         idsTarefas.add(Integer.valueOf(parser.getAttributeValue(0)));
@@ -211,12 +211,12 @@ public class Xml{
                         }
                         tarefaAtual.setProjeto(projetoAtual);
                         if (!tarefaAtual.getStatus().equals("excluir"))
-                            tarefas.add(tarefaAtual);//adiciona bean Tarefa na lista
+                            tarefas.add(tarefaAtual);//add bean task on list
                     }
                     break;
-                case XmlPullParser.END_TAG://se é fim de tag...
-                    if (nomeNode.equalsIgnoreCase("projeto")) {//...se tag é projeto...
-                        //...adiciona no TreeMap os beans Projeto e List<Tarefa>
+                case XmlPullParser.END_TAG://if reach the end of tag...
+                    if (nomeNode.equalsIgnoreCase("projeto")) {//...if tag is project...
+                        //...add on TreeMap of beans Project and List<Task>
                         this.projetos.put(projetoAtual, tarefas);
                         tarefas = new ArrayList<Tarefa>();
                     }
@@ -229,7 +229,7 @@ public class Xml{
     }
 
     /**
-     * retorna treeMap dos beans Projeto contendo beans Tarefa que foram atualizadas via webservice
+     * returns treeMap of beans Projeto containing beans Tarefa that was updated by webservice
      * @param idsTarefas
      * @return
      * @throws XmlPullParserException
@@ -245,18 +245,18 @@ public class Xml{
             InputStream in_s = this.contexto.openFileInput(this.getNomeArquivoXMLatualizadas());
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(in_s, null);
-            //lista de beans Tarefa node de cada projeto no TreeMap
+            //list of beans Tarefa node of every project on TreeMap
             tarefas = new ArrayList<Tarefa>();
             int tipoEvento = parser.getEventType();
             Projeto projetoAtual = null;
             Set<String> tagsProjeto = new HashSet<String>(Arrays.asList("nome", "equipe", "responsavel"));
             Set<String> tagsTarefa = new HashSet<String>(Arrays.asList("nome", "responsavel", "descricao", "comentarios", "vencimento", "status"));
-            //enquanto não chega no fim do documento xml...
+            //while do not reach the end of XML file...
             while (tipoEvento != XmlPullParser.END_DOCUMENT) {
                 String nomeNode = parser.getName();
                 switch (tipoEvento) {
-                    case XmlPullParser.START_TAG: //se é inicio de nova tag no xml...
-                        if (nomeNode.equals("projeto")) {//...se tag é projeto...
+                    case XmlPullParser.START_TAG: //if is the begin of a new tag...
+                        if (nomeNode.equals("projeto")) {//...if tag is project...
                             projetoAtual = new Projeto(Parcel.obtain());
                             projetoAtual.setId(Integer.valueOf(parser.getAttributeValue(0)));
                             parser.nextTag();
@@ -334,12 +334,12 @@ public class Xml{
                                 nomeNode = parser.getName();
                             }
                             tarefaAtual.setProjeto(projetoAtual);
-                            tarefas.add(tarefaAtual);//adiciona bean Tarefa na lista
+                            tarefas.add(tarefaAtual);//add bean Tarefa in list
                         }
                         break;
-                        case XmlPullParser.END_TAG://se é fim de tag...
-                            if (nomeNode.equalsIgnoreCase("projeto")) {//...se tag é projeto...
-                                //...adiciona no TreeMap os beans Projeto e List<Tarefa>
+                        case XmlPullParser.END_TAG://if reach the end of tag...
+                            if (nomeNode.equalsIgnoreCase("projeto")) {//...if tag is project...
+                                //...add on TreeMap of beans Projeto and List<Tarefa>
                                 this.projetos.put(projetoAtual, tarefas);
                                 tarefas = new ArrayList<Tarefa>();
                             }
@@ -357,7 +357,7 @@ public class Xml{
     }
 
     /**
-     * Retorna List de beans Equipe
+     * Return List of beans Team
      * @return
      * @throws XmlPullParserException
      * @throws IOException
@@ -373,12 +373,12 @@ public class Xml{
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(in_s, null);
             int tipoEvento = parser.getEventType();
-            //enquanto não chega no fim do documento xml...
+            //while do not reach the end of file...
             while (tipoEvento != XmlPullParser.END_DOCUMENT) {
                 String nomeNode = parser.getName();
                 switch (tipoEvento) {
-                    case XmlPullParser.START_TAG: //se é inicio de nova tag no xml...
-                        if (nomeNode.equals("equipe")) {//...se tag é equipe...
+                    case XmlPullParser.START_TAG: //if is the begin of a new tag...
+                        if (nomeNode.equals("equipe")) {//...if tag is team...
                             Equipe equipe = new Equipe(Parcel.obtain());
                             equipe.setId(Integer.valueOf(parser.getAttributeValue(0)));
                             parser.nextTag();
@@ -399,7 +399,7 @@ public class Xml{
     }
 
     /**
-     * Retorna List de beans Projeto
+     * Returns List of beans Project
      * @return
      * @throws XmlPullParserException
      * @throws IOException
@@ -415,12 +415,12 @@ public class Xml{
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(in_s, null);
             int tipoEvento = parser.getEventType();
-            //enquanto não chega no fim do documento xml...
+            //while do not reach the end of file...
             while (tipoEvento != XmlPullParser.END_DOCUMENT) {
                 String nomeNode = parser.getName();
                 switch (tipoEvento) {
-                    case XmlPullParser.START_TAG: //se é inicio de nova tag no xml...
-                        if (nomeNode.equals("projeto")) {//...se tag é projeto...
+                    case XmlPullParser.START_TAG: //if is begin of a new tag...
+                        if (nomeNode.equals("projeto")) {//...if tag is project...
                             Projeto projeto = new Projeto(Parcel.obtain());
                             projeto.setId(Integer.valueOf(parser.getAttributeValue(0)));
                             parser.nextTag();
@@ -441,7 +441,7 @@ public class Xml{
     }
 
     /**
-     * Retorna List de beans Usuario
+     * Returns List of beans Users
      * @return
      * @throws XmlPullParserException
      * @throws IOException
@@ -457,12 +457,12 @@ public class Xml{
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(in_s, null);
             int tipoEvento = parser.getEventType();
-            //enquanto não chega no fim do documento xml...
+            //while do not reach the end of file...
             while (tipoEvento != XmlPullParser.END_DOCUMENT) {
                 String nomeNode = parser.getName();
                 switch (tipoEvento) {
-                    case XmlPullParser.START_TAG: //se é inicio de nova tag no xml...
-                        if (nomeNode.equals("usuario")) {//...se tag é projeto...
+                    case XmlPullParser.START_TAG: //if is the begin of a new tag...
+                        if (nomeNode.equals("usuario")) {//...if tag is project...
                             Usuario usuario = new Usuario(Parcel.obtain());
                             usuario.setId(Integer.valueOf(parser.getAttributeValue(0)));
                             parser.nextTag();
@@ -482,7 +482,7 @@ public class Xml{
         //this.log();
     }
 
-    /** gera log dos beans Projeto e Tarefa no TreeMap*/
+    /** generate log of beans Project and Task on TreeMap*/
     public void log(){
         Log.i("qtd",String.valueOf(this.projetos.size()));
         for (Map.Entry<Projeto, List<Tarefa>> projeto : this.projetos.entrySet()){
