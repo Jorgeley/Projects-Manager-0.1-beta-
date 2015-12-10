@@ -349,7 +349,7 @@ public abstract class AtvBase extends Activity implements OnGroupClickListener, 
     }
 
     /**
-     * search the tasks by foreground webservice
+     * search the tasks by background webservice
      */
     public class TarefasTask extends AsyncTask<Character, Void, Boolean> {
         @Override
@@ -449,7 +449,7 @@ public abstract class AtvBase extends Activity implements OnGroupClickListener, 
     /**update tarefasTreeMap case a task has been updated by Activity AtvTarefa
      * @param idTarefa
      */
-    // flag sent by Activity AtvTarefa to know what task update on TreeMap
+    // flag sent by Activity AtvTarefa to know which task update on TreeMap
     public static int atualizarTarefaId;
     private void atualizaTarefaTreeMap(int idTarefa){
         //if task was tapped check with the task updated by activity AtvTarefa...
