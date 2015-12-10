@@ -11,12 +11,12 @@ import android.content.Intent;
 import android.os.Build;
 
 /**
- * Cria notificaçao para atualizacoes de tarefas
+ * Create notifications to updated tasks
  */
 public class Notificacao {
 
     /**
-     * Cria notificaçao para atualizaçoes das tarefas conforme a API correta do Android
+     * Create notifications according the correct Android API
      * @param contexto
      * @param titulo
      * @param mensagem
@@ -27,10 +27,10 @@ public class Notificacao {
     @SuppressWarnings("deprecation")
     @SuppressLint("NewApi")
     public static void create(Context contexto, CharSequence titulo, CharSequence mensagem, int icone, int id, Intent intent){
-        //intent para abrir qdo clicar na notificaçao
+        //intent to open when tap the notification
         PendingIntent pendingIntent = PendingIntent.getActivity(contexto, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification notificacao = null;
-        int api = Build.VERSION.SDK_INT; //level da API
+        int api = Build.VERSION.SDK_INT; //API level
         if (api >= 11) {
             Builder builder = new Builder(contexto)
                     .setContentTitle(titulo)
@@ -47,11 +47,11 @@ public class Notificacao {
             notificacao.setLatestEventInfo(contexto, titulo, mensagem, pendingIntent);
         }
         NotificationManager notificacaoManager = (NotificationManager) contexto.getSystemService(Activity.NOTIFICATION_SERVICE);
-        notificacaoManager.notify(id, notificacao);//id: identifica a notificaçao
+        notificacaoManager.notify(id, notificacao);//id: identify the notification
     }
 
     /**
-     * Cancela a notificaçao pelo id da mesma
+     * Cancel the notification by its id
      * @param contexto
      * @param id
      */
