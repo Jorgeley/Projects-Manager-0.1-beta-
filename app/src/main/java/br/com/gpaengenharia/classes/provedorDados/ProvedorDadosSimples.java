@@ -7,19 +7,19 @@ import java.util.List;
 public class ProvedorDadosSimples {
     protected List<String> tarefasList;
 
-    //gera List de tarefas
+    //generates the task List
     protected List<String> getDadosList() {
 
-        //cria ArrayList de tarefas
+        //create task ArrayList
         List<String> terraplanagem = new ArrayList<String>();
         List<String> asfaltamento = new ArrayList<String>();
         List<String> condominio = new ArrayList<String>();
 
-        //adiciona tarefas no ArrayList
+        //add tasks to ArrayList
         for (int i = 0; i < ArrayDadosTarefas.terraplanagem.length; i++) {
             terraplanagem.add(ArrayDadosTarefas.terraplanagem[i]);
         }
-        Collections.sort(terraplanagem);//ordena
+        Collections.sort(terraplanagem);//in order
 
         for (int i = 0; i < ArrayDadosTarefas.asfaltamento.length; i++) {
             asfaltamento.add(ArrayDadosTarefas.asfaltamento[i]);
