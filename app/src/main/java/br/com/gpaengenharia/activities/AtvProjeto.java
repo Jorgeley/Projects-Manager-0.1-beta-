@@ -175,10 +175,10 @@ public class AtvProjeto extends FragmentActivity implements Listener, OnItemSele
             @Override
             protected void onPostExecute(Boolean ok) {
                 if (ok) {
-                    Toast.makeText(AtvProjeto.this, "Projeto Gravado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AtvProjeto.this, "Project saved", Toast.LENGTH_SHORT).show();
                     AtvProjeto.this.finish();
                 }else
-                    Toast.makeText(AtvProjeto.this, "Erro ao tentar gravar Projeto", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AtvProjeto.this, "Error trying to save Project", Toast.LENGTH_SHORT).show();
                 Utils.barraProgresso(AtvProjeto.this, PrgProjeto, false);
             }
         }.execute();
