@@ -206,7 +206,7 @@ public abstract class AtvBase extends Activity implements OnGroupClickListener, 
         }
         //if adapter is empty, alert
         if (this.lvProjetos.getAdapter().isEmpty())
-            Toast.makeText(this,"nenhuma tarefa",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"no tasks",Toast.LENGTH_LONG).show();
     }
 
     /**inflate the commom menu to Administrator and Colaborator
