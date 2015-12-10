@@ -25,18 +25,18 @@ import br.com.gpaengenharia.R;
 import br.com.gpaengenharia.beans.Equipe;
 
 /**
- * Utilidades para o projeto
+ * Utils for project
  */
 public class Utils{
     public static Context contexto;
 
-    /** @param contexto Contexto da activity
+    /** @param contexto activity context
      */
     public Utils(Context contexto){
         this.contexto = contexto;
     }
 
-    /** Método sobrecarregado para mostrar/ocultar a barra de progresso
+    /** overload method to show/hide the progressbar
      * @param barraProgresso
      * @param mostra
      */
@@ -57,7 +57,7 @@ public class Utils{
         }
     }
 
-    /** Método sobrecarregado para mostrar/ocultar a barra de progresso
+    /** overload method to show/hide the progressbar
      * @param contexto
      * @param barraProgresso
      * @param mostra
@@ -82,9 +82,9 @@ public class Utils{
         }
     }
 
-    /**método sobrecarregado para criar adaptador para Spinner
-     * @param lista Array de strings
-     * @return  adaptador de String para Spinner
+    /** overload method to create spinner adapter
+     * @param lista Array of strings
+     * @return  adaptador of String to Spinner
      */
     public ArrayAdapter setAdaptador(String[] lista){
         ArrayAdapter adaptador = new ArrayAdapter<String>(contexto, android.R.layout.simple_spinner_item, lista){
@@ -96,10 +96,10 @@ public class Utils{
         return adaptador;
     }
 
-    /**método sobrecarregado para criar adaptador para Spinner
+    /** overload method to create spinner adapter
      * @param contexto
-     * @param lista Array de strings
-     * @return  adaptador de String para Spinner
+     * @param lista Array of strings
+     * @return  adaptador of String to Spinner
      */
     public static ArrayAdapter setAdaptador(Context contexto, String[] lista){
         ArrayAdapter adaptador = new ArrayAdapter<String>(contexto, android.R.layout.simple_spinner_item, lista){
@@ -111,21 +111,20 @@ public class Utils{
         return adaptador;
     }
 
-    /** Cria cx de diálogo para DatePicker
-     * implemente a interface para pegar a data escolhida
+    /** Creates dialog to DatePicker
      */
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
         Listener listener;
 
         public interface Listener{
-            /** pega a data escolhida
+            /** get the choosen date
              * @return data */
             public void getData(String data);
         }
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            //pega data atual
+            //get current date
             final Calendar calendario = Calendar.getInstance();
             int dia = calendario.get(Calendar.DAY_OF_MONTH);
             int mes = calendario.get(Calendar.MONTH);
@@ -136,10 +135,10 @@ public class Utils{
 
         @Override
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            //pega data escolhida no DatePicker
+            //get the choosen date on DatePicker
             Calendar calendario = Calendar.getInstance();
             calendario.set(year, month, day);
-            //formata a data
+            //format the date
             SimpleDateFormat dataFormatada = new SimpleDateFormat("dd/MM/yyyy");
             String data = dataFormatada.format(calendario.getTime());
             if (listener != null)
@@ -148,11 +147,11 @@ public class Utils{
     }
 
     /**
-     *  detecta movimentos de fling (deslizar entre telas)
-     * @param event Evento onTouch da activity
-     * @param viewFlipper viewFlipper que fará o trabalho de deslizar a tela
-     * @param layoutEsquerda O view layout para deslizar para esquerda
-     * @param layoutDireita O view layout para deslizar para direita
+     *  detect fling movements(flip between screens)
+     * @param event Evento onTouch of activity
+     * @param viewFlipper viewFlipper tha makes the wizard
+     * @param layoutEsquerda the view layout to flip to left
+     * @param layoutDireita the view layout to flip to right
      * @return ok
      */
     public static boolean onTouchEvent(MotionEvent event, ViewFlipper viewFlipper, View layoutEsquerda, View layoutDireita){
@@ -171,27 +170,27 @@ public class Utils{
             case MotionEvent.ACTION_UP: {
                 x2 = event.getX();
                 y2 = event.getY();
-                //desliza layouts da esquerda pra direita
+                //flip layouts left to right
                 if (x1 < x2) {
-                    //se já está no layout dashboard então não precisa deslizar
+                    //if on dashboard, not flip
                     if (viewFlipper.getCurrentView().getId() == layoutEsquerda.getId())
                         break;
                     viewFlipper.setInAnimation(contexto, R.anim.entra_esquerda);
                     viewFlipper.setOutAnimation(contexto, R.anim.sai_direita);
                     viewFlipper.setDisplayedChild(viewFlipper.indexOfChild(layoutEsquerda));//showNext()
-                }else if (x1 > x2) {//desliza layouts da direita pra esquerda
-                    //se já está no layout tarefas então não precisa deslizar
+                }else if (x1 > x2) {//flip layouts right to left
+                    //if on task layout, not flip
                     if (viewFlipper.getCurrentView().getId() == layoutDireita.getId())
                         break;
                     deslizaLayoutDireita(viewFlipper, layoutDireita);
                 }
                 break;
             }
-                /*//de cima para baixo
+                /*//fliping up to down
                 if (y1 < y2){
                     Toast.makeText(this, "UP to Down Swap Performed", Toast.LENGTH_LONG).show();
                 }
-                //de baixo pra cima
+                //fliping down to up
                 if (y1 > y2){
                     Toast.makeText(this, "Down to UP Swap Performed", Toast.LENGTH_LONG).show();
                 }
@@ -201,9 +200,9 @@ public class Utils{
     }
 
     /**
-     * Desliza um layout para a direita
-     * @param viewFlipper O viewFlipper que fará o trabalho de deslizar
-     * @param layoutDireita O layout para o qual deslizar para a direita
+     * flip layout to right
+     * @param viewFlipper the viewFlipper that makes the wizard
+     * @param layoutDireita the layout to flip to right
      */
     public static void deslizaLayoutDireita(ViewFlipper viewFlipper, View layoutDireita){
         viewFlipper.setInAnimation(contexto, R.anim.entra_direita);
@@ -212,9 +211,9 @@ public class Utils{
     }
 
     /**
-     * Desliza um layout para a direita
-     * @param viewFlipper O viewFlipper que fará o trabalho de deslizar
-     * @param layoutEsquerda O layout para o qual deslizar para a esquerda
+     * flip layout to right
+     * @param viewFlipper the viewFlipper that makes the wizard
+     * @param layoutEsquerda the layout to flip to left
      */
     public static void deslizaLayoutEsquerda(ViewFlipper viewFlipper, View layoutEsquerda){
         viewFlipper.setInAnimation(contexto, R.anim.entra_esquerda);
