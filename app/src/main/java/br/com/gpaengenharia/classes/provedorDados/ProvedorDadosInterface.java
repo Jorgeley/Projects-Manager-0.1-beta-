@@ -1,11 +1,11 @@
 package br.com.gpaengenharia.classes.provedorDados;
 
-/** interface para as classes filhas de ProvedorDados */
+/** interface for ProvedorDados's children classes */
 public interface ProvedorDadosInterface {
 
     /**
-     * Busca o TreeMap de beans Projeto e Tarefa do XML e seta
-     * no objeto projetosTreeMapBean
+     * brings the TreeMap of beans Projeto and Tarefa from XML and
+     * set on projetosTreeMapBean object
      */
     public abstract void setProjetosTreeMapBean();
 }
