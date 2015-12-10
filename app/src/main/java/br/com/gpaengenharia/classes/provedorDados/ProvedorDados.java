@@ -11,25 +11,25 @@ import br.com.gpaengenharia.beans.Projeto;
 import br.com.gpaengenharia.beans.Tarefa;
 
 /**
- * Provê os dados dos beans Projeto e Tarefa
+ * Provide the data beans Projeto and Tarefa
  */
 public abstract class ProvedorDados{
     protected TreeMap<Projeto, List<Tarefa>> projetosTreeMapBean = new TreeMap<Projeto, List<Tarefa>>();
 
-    /**gera TreeMapTesteEstático de projetosPessoais contendo tarefas como nós
-     * @return TreeMap String, ListString dos projetosPessoais com as tarefas (estático)
+    /**generates static TreeMapTeste of personal projects containing tasks
+     * @return TreeMap String, ListString
      */
     public TreeMap<String, List<String>> getDadosTreeMapTeste() {
         TreeMap<String, List<String>> projetosTreeMap = new TreeMap<String, List<String>>();
-        //cria ArrayList de tarefas
+        //create ArrayList of tasks
         List<String> terraplanagem = new ArrayList<String>();
         List<String> asfaltamento = new ArrayList<String>();
         List<String> condominio = new ArrayList<String>();
-        //adiciona tarefas no ArrayList
+        //add tasks on ArrayList
         for (int i = 0; i < ArrayDadosTarefas.terraplanagem.length; i++) {
             terraplanagem.add(ArrayDadosTarefas.terraplanagem[i]);
         }
-        Collections.sort(terraplanagem);//ordena
+        Collections.sort(terraplanagem);//in order
         for (int i = 0; i < ArrayDadosTarefas.asfaltamento.length; i++) {
             asfaltamento.add(ArrayDadosTarefas.asfaltamento[i]);
         }
@@ -38,7 +38,7 @@ public abstract class ProvedorDados{
             condominio.add(ArrayDadosTarefas.condominio[i]);
         }
         Collections.sort(condominio);
-        //adiciona tarefas no projeto
+        //add task to project
         projetosTreeMap.put("Terraplanagem Aeroporto", terraplanagem);
         projetosTreeMap.put("Asfaltamento Periferia", asfaltamento);
         projetosTreeMap.put("Condominio Centro", condominio);
@@ -51,21 +51,20 @@ public abstract class ProvedorDados{
     }
 
     @Deprecated
-    /**Busca os beans Projeto e Tarefa do Xml e transforma em TreeMap de String
-     * inverteAgrupamento:
-     * @param inverteAgrupamento se True inverte o agrupamento do TreeMap agrupando por tarefas
-     *                          se False deixa agrupamento por projetosPessoais e tarefas com nós dos projetosPessoais
-     * @return TreeMap String, ListString dos projetosPessoais com as tarefas **/
+    /**bring the beans Projeto and Tarefa of Xml file and translate to TreeMap of String
+     * @param inverteAgrupamento if True invert the agroupment of TreeMap grouping by tasks containing its project
+     *                           if False group by projects containing tasks
+     * @return TreeMap String, ListString of personal projects with tasks **/
     public TreeMap<String, List<String>> getTarefas(boolean inverteAgrupamento){
-        //TreeMap dos projetosPessoais convertidos de beans para strings
+        //TreeMap of personal projects translated from beans to string
         TreeMap<String, List<String>> projetosTreeMapString = new TreeMap<String, List<String>>();
-        //para cada Projeto com sua lista de Tarefa no TreeMap de beans...
+        //for every project containing its tasks...
         for (Map.Entry<Projeto, List<Tarefa>> projetosTarefasBean : this.projetosTreeMapBean.entrySet()){
-            Projeto projetoBean = projetosTarefasBean.getKey();//pega o projeto atual
-            List<Tarefa> tarefasBean = projetosTarefasBean.getValue();//pega a lista de tarefas do projeto
-            if (inverteAgrupamento) {//se for pra inverter o agrupamento...
+            Projeto projetoBean = projetosTarefasBean.getKey();//get current project
+            List<Tarefa> tarefasBean = projetosTarefasBean.getValue();//get its tasks
+            if (inverteAgrupamento) {//if has to reverse the agroupment...
                 String nomeProjeto = projetoBean.getNome();
-                //...para cada tarefa adiciona no TreeMap de String a tarefa e seu projeto, sem sublista...
+                //...for every task add on TreeMap of String the task and its project, no sublist...
                 for (Tarefa tarefa : tarefasBean) {
                     SimpleDateFormat formataData = new SimpleDateFormat("dd/MM/yyy", new Locale("pt","BR"));
                     String data = formataData.format(tarefa.getVencimento());
@@ -73,7 +72,7 @@ public abstract class ProvedorDados{
                     projetosString.add(0, nomeProjeto + " [" + data + ']');
                     projetosTreeMapString.put(tarefa.getNome(), projetosString);
                 }
-            }else{//...senão, adiciona no TreeMap de String o projeto com sua sublista de tarefas
+            }else{//...add on TreeMap of String the project with task sublist
                 List<String> tarefasString = new ArrayList<String>();
                 for (Tarefa tarefa : tarefasBean)
                     tarefasString.add(tarefa.getNome());
