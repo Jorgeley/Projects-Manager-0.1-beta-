@@ -6,7 +6,7 @@
         android:maxSdkVersion="21"
         android:minSdkVersion="15" />
 
-    <!-- permissoes -->
+    <!-- permissions -->
     <android:uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <android:uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
