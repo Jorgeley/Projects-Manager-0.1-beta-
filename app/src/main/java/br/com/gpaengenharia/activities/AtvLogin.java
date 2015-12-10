@@ -81,7 +81,7 @@ public class AtvLogin extends Activity{
     }
 
     /**
-     * foreground login
+     * background login
      */
     private ProgressBar PrgLogin;
     public class LoginTask extends AsyncTask<Void, Void, Boolean> {
@@ -165,9 +165,9 @@ public class AtvLogin extends Activity{
                         return null;
                     }
                 }.execute();
-                Toast.makeText(AtvLogin.this, "Bem vindo "+String.valueOf("["+usuario.getPerfil()+"]"+usuario.getNome()), Toast.LENGTH_LONG).show();
+                Toast.makeText(AtvLogin.this, "Welcome "+String.valueOf("["+usuario.getPerfil()+"]"+usuario.getNome()), Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(AtvLogin.this, "Usuário ou senha inválidos", Toast.LENGTH_LONG).show();
+                Toast.makeText(AtvLogin.this, "invalid user or password", Toast.LENGTH_LONG).show();
             }
             Utils.barraProgresso(AtvLogin.this, PrgLogin, false);
         }
