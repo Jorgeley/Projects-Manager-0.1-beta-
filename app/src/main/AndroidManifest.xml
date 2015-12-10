@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="br.com.gpaengenharia" >
+
+    <uses-sdk
+        android:maxSdkVersion="21"
+        android:minSdkVersion="15" />
+
+    <!-- permissoes -->
+    <android:uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <android:uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission android:name="android.permission.INTERNET" />
+    <android:uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:theme="@style/TemaGeral" >
+
+        <!--services-->
+        <service android:name=".classes.ServicoTarefas" android:exported="false" >
+            <intent-filter>
+                <action android:name="br.com.gpaengenharia.classes.SERVICO_TAREFAS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <!-- broadcastReceivers -->
+        <receiver android:name=".classes.AgendaServico" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".classes.getAlarme" >
+            <intent-filter>
+                <action android:name="EXECUTA_ALARME" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+        <!-- activities -->
+        <activity
+            android:name=".activities.AtvLogin"
+            android:label="@string/nome_app"
+            android:theme="@style/TemaGeral.TemaLogin" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.AtvTarefa"
+            android:label=""
+            android:theme="@style/TemaGeral.TemaTarefa" >
+        </activity>
+        <activity
+            android:name=".activities.AtvColaborador"
+            android:label="@string/title_activity_atv_colaborador"
+            android:parentActivityName=".activities.AtvColaborador" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.com.gpaengenharia.activities.AtvBase" />
+        </activity>
+        <activity
+            android:name=".activities.AtvAdministrador"
+            android:label="@string/titulo_atv_administrador"
+            android:parentActivityName=".activities.AtvAdministrador" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.com.gpaengenharia.activities.AtvBase" />
+        </activity>
+        <activity
+            android:name=".activities.AtvProjeto"
+            android:label="@string/titulo_atv_projeto" >
+        </activity>
+        <activity
+            android:name=".activities.AtvUsuarios"
+            android:label="@string/titulo_atv_usuarios" >
+        </activity>
+    </application>
+
+</manifest>
