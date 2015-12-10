@@ -19,7 +19,7 @@ import br.com.gpaengenharia.beans.Tarefa;
 import br.com.gpaengenharia.beans.Usuario;
 
 /**
- * Classe responsavel pela comunicaçao entre o app e o servidor
+ * Class responsible for comunication between app and server
  */
 public class WebService{
 
@@ -35,9 +35,9 @@ public class WebService{
     //SOAP Action URI again Namespace + Web method name
     //private static String SOAP_ACTION = "http://"+SERVIDOR+"/WEB/GPA/public/webservice/soap#";
     private static String SOAP_ACTION = "http://"+SERVIDOR+"/webservice/soap#";
-    //usuario para todas as operaçoes no webservice
+    //user for webservice operations
     private Usuario usuario;
-    //flag enviada ao servidor do webservice indicando p/ retornar os projetos, mesmo estando atualizados
+    //flag sent to server, indicates to return the projects, even already updated
     private boolean forcarAtualizacao = false;
 
     public void setUsuario(Usuario usuario) {
@@ -57,15 +57,15 @@ public class WebService{
     }
 
     /**
-     * faz o login via webservice no servidor e retorna o objeto Usuario
+     * login by webservice, returns the Usuario object
      * @param login
      * @param senha
      * @return Usuario
      */
     public static Usuario login(String login, String senha) {
-        //requisição SOAP
+        //SOAP request
         SoapObject requisicao = new SoapObject(NAMESPACE, "autentica");
-        //setando parametros do método do webservice 'autentica'
+        //set the parameters of webservice method 'autentica'
         PropertyInfo loginWebservice = new PropertyInfo();
         PropertyInfo senhaWebservice = new PropertyInfo();
         loginWebservice.setName("login");
@@ -76,16 +76,16 @@ public class WebService{
         senhaWebservice.setValue(senha);
         senhaWebservice.setType(String.class);
         requisicao.addProperty(senhaWebservice);
-        //evelopando a requisição
+        //enveloping the request
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(requisicao);
-        //requisição HTTP
+        //HTTP request
         HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-        //bean Usuario
+        //Usuario bean
         Usuario usuario = new Usuario(Parcel.obtain());
-        try {//faz a chamada do método 'autentica' do webservice
+        try {//calls 'autentica' webservice method
             androidHttpTransport.call(SOAP_ACTION + "autentica", envelope);
-            //pegando a resposta
+            //getting the response
             Vector<Vector<Vector<Object>>> resposta = (Vector<Vector<Vector<Object>>>) envelope.getResponse();
             usuario.setId((Integer) resposta.get(0).get(0).get(0));
             usuario.setNome((String) resposta.get(0).get(0).get(1));
@@ -98,7 +98,7 @@ public class WebService{
                 usuario.getEquipes().add(equipe);
             }
         } catch (Exception e) {
-            //se não conseguir autenticar retorna null
+            //if cannot authenticate, returns null
             usuario = null;
             e.printStackTrace();
         }
@@ -106,14 +106,14 @@ public class WebService{
     }
 
     /**
-     * sincroniza as tarefas do usuario
+     * sync the user tasks
      * @param ultimaSincronizacao
-     * @return array ids tarefas atualizadas, XML tarefas atualizadas e flags de quais XML's atualizar
+     * @return array ids of updated tasks, XML tasks updated and flags of which XML's have to update
      */
     public Object[] sincroniza(String ultimaSincronizacao) {
-        //requisição SOAP
+        //SOAP request
         SoapObject requisicao = new SoapObject(NAMESPACE, "sincroniza");
-        //setando parametros do método do webservice 'sincroniza'
+        //setting the parameters of 'sincroniza' webservice method
         requisicao.addProperty(this.getPropertyInfoUsuario());
         PropertyInfo ultimaSincronizacaoWebservice = new PropertyInfo();
         ultimaSincronizacaoWebservice.setName("ultimaSincronizacao");
@@ -121,24 +121,24 @@ public class WebService{
         ultimaSincronizacaoWebservice.setType(String.class);
         requisicao.addProperty(ultimaSincronizacaoWebservice);
         //Log.i("ultimaSincronizacao", ultimaSincronizacao);
-        //evelopando a requisição
+        //enveloping the request
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(requisicao);
-        //requisição HTTP
+        //HTTP request
         HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
         Vector<Integer> idsTarefas = null;
         Vector<Boolean> flagsSincroniza = null;
         String xml = null;
-        try {//faz a chamada do método 'sincroniza' do webservice
+        try {//calls the 'sincroniza' webservice method
             androidHttpTransport.call(SOAP_ACTION + "sincroniza", envelope);
-            //pegando a resposta
+            //getting the response
             Vector<Object> resposta = (Vector<Object>) envelope.getResponse();
             if (resposta == null)
                 return null;
             else {
-                idsTarefas = (Vector<Integer>) resposta.get(0); //id's das tarefas atualizadas
-                flagsSincroniza = (Vector<Boolean>) resposta.get(2); //flags de quais XML's atualizar
-                xml = resposta.get(1).toString(); //XML contendo todas as tarefas atualizads
+                idsTarefas = (Vector<Integer>) resposta.get(0); //id's of updated tasks
+                flagsSincroniza = (Vector<Boolean>) resposta.get(2); //flags of which XML's have to update
+                xml = resposta.get(1).toString(); //XML containing all updated tasks
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -148,37 +148,37 @@ public class WebService{
     }
 
     /**
-     * Conclui (administrador) ou solicita conclusao (colaborador) da tarefa
+     * Conclude (administrator) or request conclusion (colaborator) of task
      * @param tarefa
      * @param confirma
-     * @return 'concluida' ou 'concluir'
+     * @return 'concluida' or 'concluir'
      */
     public String concluiTarefa(Tarefa tarefa, String confirma) {
-        //requisição SOAP
+        //SOAP request
         SoapObject requisicao = new SoapObject(NAMESPACE, "concluiTarefa");
-        //setando parametros do método do webservice 'projetosPessoais'
+        //setting the parameters of 'projetosPessoais' webservice method
         requisicao.addProperty(this.getPropertyInfoUsuario());
-        //setando parametro 'idTarefa' do método do webservice 'concluiTarefa'
+        //setting the parameter 'idTarefa' of 'concluiTarefa' webservice method
         PropertyInfo idTarefaWebservice = new PropertyInfo();
         idTarefaWebservice.setName("idTarefa");
         idTarefaWebservice.setValue(tarefa.getId());
         idTarefaWebservice.setType(Integer.class);
         requisicao.addProperty(idTarefaWebservice);
-        //setando parametro 'confirma' do método do webservice 'concluiTarefa'
+        //setting parameter 'confirma' of 'concluiTarefa' webservice method
         PropertyInfo confirmaWebservice = new PropertyInfo();
         confirmaWebservice.setName("confirma");
         confirmaWebservice.setValue(confirma);
         confirmaWebservice.setType(String.class);
         requisicao.addProperty(confirmaWebservice);
-        //evelopando a requisição
+        //enveloping the request
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(requisicao);
-        //requisição HTTP
+        //HTTP request
         HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
         String resposta = null;
-        try {//faz a chamada do método 'projetosPessoais' do webservice
+        try {//calls 'projetosPessoais' webservice method
             androidHttpTransport.call(SOAP_ACTION + "concluiTarefa", envelope);
-            //pegando a resposta
+            //getting the response
             resposta = (String) envelope.getResponse();
         } catch (Exception e) {
             e.printStackTrace();
@@ -187,24 +187,24 @@ public class WebService{
     }
 
     /**
-     * pega o XML de projetosPessoais com tarefas do usuario
-     * @return XML de projetosPessoais com as tarefas
+     * get the XML 'projetosPessoais' with user tasks
+     * @return XML
      */
     public String projetosPessoais() {
-        //requisição SOAP
+        //SOAP request
         SoapObject requisicao = new SoapObject(NAMESPACE, "projetosPessoais");
-        //setando parametros do método do webservice 'projetosPessoais'
+        //setting parameters of 'projetosPessoais' webservice method
         requisicao.addProperty(this.getPropertyInfoUsuario());
         requisicao.addProperty(this.getForcarAtualizacao());
-        //evelopando a requisição
+        //enveloping the request
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(requisicao);
-        //requisição HTTP
+        //HTTP request
         HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
         String xml = null;
-        try {//faz a chamada do método 'projetosPessoais' do webservice
+        try {//calls the 'projetosPessoais' webservice method
             androidHttpTransport.call(SOAP_ACTION + "projetosPessoais", envelope);
-            //pegando a resposta
+            //getting the response
             xml = (String) envelope.getResponse();
         } catch (Exception e) {
             e.printStackTrace();
@@ -213,24 +213,24 @@ public class WebService{
     }
 
     /**
-     * pega o XML de projetosEquipes com tarefas do usuario
-     * @return XML de projetosEquipes com as tarefas
+     * get the XML projetosEquipes with tasks of the user's team
+     * @return XML
      */
     public String projetosEquipes() {
-        //requisição SOAP
+        //SOAP request
         SoapObject requisicao = new SoapObject(NAMESPACE, "projetosEquipes");
-        //setando parametros do método do webservice 'projetosEquipes'
+        //setting the parameters of 'projetosEquipes' webservice method
         requisicao.addProperty(this.getPropertyInfoUsuario());
         requisicao.addProperty(this.getForcarAtualizacao());
-        //evelopando a requisição
+        //enveloping the request
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(requisicao);
-        //requisição HTTP
+        //HTTP request
         HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
         String xml = null;
-        try {//faz a chamada do método 'projetosEquipes' do webservice
+        try {//calls 'projetosEquipes' webservice method
             androidHttpTransport.call(SOAP_ACTION + "projetosEquipes", envelope);
-            //pegando a resposta
+            //getting the response
             xml = (String) envelope.getResponse();
         } catch (Exception e) {
             e.printStackTrace();
@@ -239,24 +239,24 @@ public class WebService{
     }
 
     /**
-     * pega o XML de projetos da data de hoje com tarefas do usuario
-     * @return XML de projetos com as tarefas de hoje
+     * get the XML today user's projects
+     * @return XML
      */
     public String projetosHoje() {
-        //requisição SOAP
+        //SOAP request
         SoapObject requisicao = new SoapObject(NAMESPACE, "projetosHoje");
-        //setando parametros do método do webservice 'projetosHoje'
+        //setting the parameters of 'projetosHoje' webservice method
         requisicao.addProperty(this.getPropertyInfoUsuario());
         requisicao.addProperty(this.getForcarAtualizacao());
-        //evelopando a requisição
+        //enveloping the request
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(requisicao);
-        //requisição HTTP
+        //HTTP request
         HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
         String xml = null;
-        try {//faz a chamada do método 'projetosHoje' do webservice
+        try {//calls 'projetosHoje' webservice method
             androidHttpTransport.call(SOAP_ACTION + "projetosHoje", envelope);
-            //pegando a resposta
+            //getting the response
             xml = (String) envelope.getResponse();
         } catch (Exception e) {
             e.printStackTrace();
@@ -265,24 +265,24 @@ public class WebService{
     }
 
     /**
-     * pega o XML de projetos com tarefas da semana atual
-     * @return XML de projetos com as tarefas da semana
+     * get the XML week user's projects
+     * @return XML
      */
     public String projetosSemana() {
-        //requisição SOAP
+        //SOAP request
         SoapObject requisicao = new SoapObject(NAMESPACE, "projetosSemana");
-        //setando parametros do método do webservice 'projetosSemana'
+        //setting the parameters of 'projetosSemana' webservice method
         requisicao.addProperty(this.getPropertyInfoUsuario());
         requisicao.addProperty(this.getForcarAtualizacao());
-        //evelopando a requisição
+        //enveloping the request
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(requisicao);
-        //requisição HTTP
+        //HTTP request
         HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
         String xml = null;
-        try {//faz a chamada do método 'projetosSemana' do webservice
+        try {//calls 'projetosSemana' webservice method
             androidHttpTransport.call(SOAP_ACTION + "projetosSemana", envelope);
-            //pegando a resposta
+            //getting the response
             xml = (String) envelope.getResponse();
         } catch (Exception e) {
             e.printStackTrace();
@@ -291,24 +291,24 @@ public class WebService{
     }
 
     /**
-     * busca via webservice as tarefas arquivadas (concluidas)
+     * bring the filed tasks (concludeds)
      * @return
      */
     public String tarefasArquivadas(){
-        //requisição SOAP
+        //SOAP request
         SoapObject requisicao = new SoapObject(NAMESPACE, "tarefasArquivadas");
-        //setando parametros do método do webservice 'tarefasArquivadas'
+        //setting parameters of 'tarefasArquivadas' webservice method
         requisicao.addProperty(this.getPropertyInfoUsuario());
         requisicao.addProperty(this.getForcarAtualizacao());
-        //evelopando a requisição
+        //enveloping the request
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(requisicao);
-        //requisição HTTP
+        //HTTP request
         HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
         String xml = null;
-        try {//faz a chamada do método 'tarefasArquivadas' do webservice
+        try {//calls 'tarefasArquivadas' webservice method
             androidHttpTransport.call(SOAP_ACTION + "tarefasArquivadas", envelope);
-            //pegando a resposta
+            //getting the response
             xml = (String) envelope.getResponse();
         } catch (Exception e) {
             e.printStackTrace();
@@ -317,38 +317,38 @@ public class WebService{
     }
 
     /**
-     * grava comentario de uma tarefa do usuario
+     * save the comment of a user task
      * @param idTarefa
      * @param textoComentario
-     * @return String comentario gravado e flags de quais XML's atualizar
+     * @return String saved comment and flags of whiches XML have to update
      */
     public Object[] gravacomentario(int idTarefa, String textoComentario) {
-        //requisição SOAP
+        //SOAP request
         SoapObject requisicao = new SoapObject(NAMESPACE, "gravaComentario");
-        //setando parametro 'usuario' do método do webservice 'gravacomentario'
+        //setting parameter 'usuario' of 'gravacomentario' webservice method
         requisicao.addProperty(this.getPropertyInfoUsuario());
-        //setando parametro 'idTarefa' do método do webservice 'gravacomentario'
+        //setting parameter 'idTarefa' of 'gravacomentario' webservice method
         PropertyInfo idTarefaWebservice = new PropertyInfo();
         idTarefaWebservice.setName("idTarefa");
         idTarefaWebservice.setValue(idTarefa);
         idTarefaWebservice.setType(Integer.class);
         requisicao.addProperty(idTarefaWebservice);
-        //setando parametro 'textoComentario' do método do webservice 'gravacomentario'
+        //setting parameter 'textoComentario' of 'gravacomentario' webservice method
         PropertyInfo textoComentarioWebservice = new PropertyInfo();
         textoComentarioWebservice.setName("textoComentario");
         textoComentarioWebservice.setValue(textoComentario);
         textoComentarioWebservice.setType(String.class);
         requisicao.addProperty(textoComentarioWebservice);
-        //evelopando a requisição
+        //enveloping the request
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(requisicao);
-        //requisição HTTP
+        //HTTP request
         HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
         String comentario = null;
         Vector<Boolean> flagsSincroniza = null;
-        try {//faz a chamada do método 'gravacomentario' do webservice
+        try {//calls 'gravacomentario' webservice method
             androidHttpTransport.call(SOAP_ACTION + "gravaComentario", envelope);
-            //pegando a resposta
+            //getting the response
             Vector<Object> resposta = (Vector<Object>) envelope.getResponse();
             comentario = (String) resposta.get(0);
             flagsSincroniza = (Vector<Boolean>) resposta.get(1);
@@ -360,12 +360,12 @@ public class WebService{
     }
 
     /**
-     * Grava projeto via webservice
+     * save project
      * @param projeto
-     * @return boolean resposta
+     * @return boolean response
      */
     public static boolean gravaProjeto(Projeto projeto){
-        //requisição SOAP
+        //SOAP request
         SoapObject requisicao = new SoapObject(NAMESPACE, "gravaProjeto");
         PropertyInfo nomeProjeto = new PropertyInfo();
         nomeProjeto.setName("nomeProjeto");
@@ -394,15 +394,15 @@ public class WebService{
             usuarioProjeto.setValue(projeto.getUsuario().getId());
         usuarioProjeto.setType(Integer.class);
         requisicao.addProperty(usuarioProjeto);
-        //evelopando a requisição
+        //enveloping the request
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(requisicao);
-        //requisição HTTP
+        //HTTP request
         HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
         boolean resposta = false;
-        try {//faz a chamada do método 'gravaprojeto' do webservice
+        try {//calls 'gravaprojeto' webservice method
             androidHttpTransport.call(SOAP_ACTION + "gravaProjeto", envelope);
-            //pegando a resposta
+            //getting the response
             resposta = (boolean) envelope.getResponse();
         } catch (Exception e) {
             e.printStackTrace();
@@ -411,12 +411,12 @@ public class WebService{
     }
 
     /**
-     * Grava tarefa via webservice
+     * Save the task
      * @param tarefa
-     * @return boolean resposta
+     * @return boolean response
      */
     public static boolean gravaTarefa(Tarefa tarefa){
-        //requisição SOAP
+        //SOAP request
         SoapObject requisicao = new SoapObject(NAMESPACE, "gravaTarefa");
         PropertyInfo id = new PropertyInfo();
         id.setName("id");
@@ -448,15 +448,15 @@ public class WebService{
         responsavel.setValue(tarefa.getUsuario().getId());
         responsavel.setType(Integer.class);
         requisicao.addProperty(responsavel);
-        //evelopando a requisição
+        //enveloping the request
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(requisicao);
-        //requisição HTTP
+        //HTTP request
         HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
         boolean resposta = false;
-        try {//faz a chamada do método 'gravatarefa' do webservice
+        try {//calls 'gravatarefa' webservice method
             androidHttpTransport.call(SOAP_ACTION + "gravaTarefa", envelope);
-            //pegando a resposta
+            //getting the response
             resposta = (boolean) envelope.getResponse();
         } catch (Exception e) {
             e.printStackTrace();
@@ -465,7 +465,7 @@ public class WebService{
     }
 
     public Vector<Boolean> excluiTarefa(Tarefa tarefa){
-        //requisição SOAP
+        //SOAP request
         SoapObject requisicao = new SoapObject(NAMESPACE, "excluiTarefa");
         PropertyInfo idTarefa = new PropertyInfo();
         idTarefa.setName("idTarefa");
@@ -473,15 +473,15 @@ public class WebService{
         idTarefa.setType(Integer.class);
         requisicao.addProperty(idTarefa);
         requisicao.addProperty(getPropertyInfoUsuario());
-        //evelopando a requisição
+        //enveloping the request
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(requisicao);
-        //requisição HTTP
+        //HTTP request
         HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
         Vector<Boolean> resposta = null;
-        try {//faz a chamada do método 'gravatarefa' do webservice
+        try {//calls 'gravatarefa' webservice method
             androidHttpTransport.call(SOAP_ACTION + "excluiTarefa", envelope);
-            //pegando a resposta
+            //getting the response
             resposta = (Vector<Boolean>) envelope.getResponse();
         } catch (Exception e) {
             e.printStackTrace();
@@ -490,22 +490,22 @@ public class WebService{
     }
 
     /**
-     * Retorna lista de equipes, usado na atvProjeto
-     * @return XML das equipes
+     * returns team list, used by activity atvProjeto
+     * @return XML
      */
     public static String getEquipes() {
         List<Equipe> equipes = null;
-        //requisição SOAP
+        //SOAP request
         SoapObject requisicao = new SoapObject(NAMESPACE, "getEquipes");
-        //evelopando a requisição
+        //enveloping the request
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(requisicao);
-        //requisição HTTP
+        //HTTP request
         HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
         String resposta = null;
-        try {//faz a chamada do método 'getEquipes' do webservice
+        try {//calls 'getEquipes' webservice method
             androidHttpTransport.call(SOAP_ACTION + "getEquipes", envelope);
-            //pegando a resposta
+            //getting the response
             resposta = (String) envelope.getResponse();
         } catch (Exception e) {
             e.printStackTrace();
@@ -514,12 +514,12 @@ public class WebService{
     }
 
     /**
-     * Retorna lista de projetos, usado na atvTarefa
-     * @return XML dos projetos
+     * returns project list, used by activity atvTarefa
+     * @return XML
      * @param ultimaSincronizacao
      */
     public String getProjetos(String ultimaSincronizacao) {
-        //requisição SOAP
+        //SOAP request
         SoapObject requisicao = new SoapObject(NAMESPACE, "getProjetos");
         requisicao.addProperty(this.getPropertyInfoUsuario());
         PropertyInfo ultimaSincronizacaoWebservice = new PropertyInfo();
@@ -527,15 +527,15 @@ public class WebService{
         ultimaSincronizacaoWebservice.setValue(ultimaSincronizacao);
         ultimaSincronizacaoWebservice.setType(String.class);
         requisicao.addProperty(ultimaSincronizacaoWebservice);
-        //evelopando a requisição
+        //enveloping the request
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(requisicao);
-        //requisição HTTP
+        //HTTP request
         HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
         String resposta = null;
-        try {//faz a chamada do método 'getProjetos' do webservice
+        try {//calls 'getProjetos' webservice method
             androidHttpTransport.call(SOAP_ACTION + "getProjetos", envelope);
-            //pegando a resposta
+            //getting the response
             resposta = (String) envelope.getResponse();
         } catch (Exception e) {
             e.printStackTrace();
@@ -544,27 +544,27 @@ public class WebService{
     }
 
     /**
-     * Retorna lista de usuarios, usado na atvTarefa
-     * @return XML dos usuarios
+     * returns user list, used by activity atvTarefa
+     * @return XML
      * @param ultimaSincronizacao
      */
     public static String getUsuarios(String ultimaSincronizacao) {
-        //requisição SOAP
+        //SOAP request
         SoapObject requisicao = new SoapObject(NAMESPACE, "getUsuarios");
         PropertyInfo ultimaSincronizacaoWebservice = new PropertyInfo();
         ultimaSincronizacaoWebservice.setName("ultimaSincronizacao");
         ultimaSincronizacaoWebservice.setValue(ultimaSincronizacao);
         ultimaSincronizacaoWebservice.setType(String.class);
         requisicao.addProperty(ultimaSincronizacaoWebservice);
-        //evelopando a requisição
+        //enveloping the request
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(requisicao);
-        //requisição HTTP
+        //HTTP request
         HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
         String resposta = null;
-        try {//faz a chamada do método 'getUsuarios' do webservice
+        try {//calls 'getUsuarios' webservice method
             androidHttpTransport.call(SOAP_ACTION + "getUsuarios", envelope);
-            //pegando a resposta
+            //getting the response
             resposta = (String) envelope.getResponse();
         } catch (Exception e) {
             e.printStackTrace();
@@ -573,8 +573,8 @@ public class WebService{
     }
 
         /**
-     * retorna o parametro 'usuario' para setar na requisiçao do webservice
-     * @return PropertyInfo usuario
+     * returns the parameter 'usuario' to set on webservice request
+     * @return PropertyInfo
      */
     private PropertyInfo getPropertyInfoUsuario(){
         PropertyInfo idUsuarioWebservice = new PropertyInfo();
@@ -585,16 +585,16 @@ public class WebService{
     }
 
     /**
-     * retorna o parametro 'forcarAtualizacao' para setar na requisicao do webservice
-     * @return PropertyInfo forcarAtualizacao
+     * returns the parameter 'forcarAtualizacao' to set on webservice request
+     * @return PropertyInfo
      */
     private PropertyInfo getForcarAtualizacao(){
         PropertyInfo forcarAtualizacao = new PropertyInfo();
         /**
-         * no servidor do webservice o atributo 'novasTarefas' da classe 'AclUsuario' indica se ha
-         * novas tarefas p/ serem enviadas, entao no forcarAtualizacao pode ser que nao carregue as tarefas
-         * devido a esse atributo, portanto a flag abaixo 'forcarAtualizacao' indica que deve retornar as
-         * tarefas independentemente do atributo 'novasTarefas' (miaaaaaaaaaauuuuuuuuuuu)
+         * on server, the 'novasTarefas' property of 'AclUsuario' class indicates if there is
+         * new tasks to be sent, so the 'forcarAtualizacao' webservice method perhaps do not load the tasks
+         * because of this property, so the flag below 'forcarAtualizacao' indicates that the server
+         * must return the tasks ignoring the 'novasTarefas' property (COP: Cat Oriented Programming)
          */
         forcarAtualizacao.setName("forcarAtualizacao");
         forcarAtualizacao.setValue(this.isForcarAtualizacao());
