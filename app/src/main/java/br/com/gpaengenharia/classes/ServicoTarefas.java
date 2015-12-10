@@ -35,9 +35,9 @@ import br.com.gpaengenharia.classes.xmls.XmlTarefasPessoais;
 import br.com.gpaengenharia.classes.xmls.XmlTarefasSemana;
 
 /**
- * serviço agendado pela classe AgendaServico para ser executado a cada minuto
- * verifica via webservice se houve atualizaçoes nas tarefas do usuario, se sim, baixa
- * XML atualizado e cria notificaçao para cada tarefa atualizada
+ * service scheduled by AgendaServico class to be executed every minute
+ * verify by webservice if there were updates on tasks, if yes, download the
+ * updated XML and create notification for every updated task
  */
 public class ServicoTarefas extends Service implements Runnable{
     private Context contexto;
@@ -49,7 +49,7 @@ public class ServicoTarefas extends Service implements Runnable{
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null; //sem interatividade com o serviço
+        return null; //no interactions
     }
 
     @Override
@@ -61,26 +61,26 @@ public class ServicoTarefas extends Service implements Runnable{
 
     @Override
     public void run(){
-        //arquivo XML contendo as tarefas atualizadas
+        //XML file containing the updated tasks
         File arquivo = new File(this.getContexto().getFilesDir() + "/" + Xml.getNomeArquivoXMLatualizadas());
         SimpleDateFormat formatoData = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", new Locale("pt", "BR"));
         Date data = new Date();
-        data.setTime(arquivo.lastModified());//pega a data de modificaçao do arquivo XML
+        data.setTime(arquivo.lastModified());//get the modification time of XML file
         String ultimaSincronizacao = formatoData.format(data);
-        Vector<Vector<Object>> respostasSincroniza;//ids das tarefas atualizadas e flags de quais XML's atualizar
-        TreeMap<Projeto, List<Tarefa>> projetosTarefas; //treeMap de beans projetos contendo beans tarefas em cada
+        Vector<Vector<Object>> respostasSincroniza;//ids of tasks updateds and flags of wich tasks to update
+        TreeMap<Projeto, List<Tarefa>> projetosTarefas; //treeMap of project beans containing tasks beans in everyone
         try {
             Xml xml = new Xml(this.getContexto());
-            //chama o webservice que verifica se ha tarefas novas de acordo com a data de modificaçao do XML local
+            //calls the webservice that verify if there are new tasks checking the modification time of XML file
             respostasSincroniza = xml.sincronizaXmlTudoWebservice(AtvLogin.usuario, ultimaSincronizacao);
             if (respostasSincroniza != null) {
                 if (this.getNotificacoes()) {
-                    //monta treeMap de beans projetos contendo beans tarefas em cada
-                    projetosTarefas = xml.leXmlProjetosTarefas(respostasSincroniza.get(0)); //indice 0 contem ids das tarefas atualizadas
+                    //build the treeMap of beans
+                    projetosTarefas = xml.leXmlProjetosTarefas(respostasSincroniza.get(0)); //index 0 contains ids of updated tasks
                     if (!projetosTarefas.isEmpty()) {
                         //Log.i("projetosTarefas", String.valueOf(projetosTarefas));
                         for (Map.Entry<Projeto, List<Tarefa>> projetoTarefas : projetosTarefas.entrySet()) {
-                            //para cada tarefa nova cria uma notificaçao contendo a mesma
+                            //for every new task create a notification
                             for (Tarefa tarefa : projetoTarefas.getValue()) {
                                 if (!tarefa.getStatus().equals("arquivada")) {
                                     Bundle bundleTarefa = new Bundle();
@@ -111,40 +111,40 @@ public class ServicoTarefas extends Service implements Runnable{
                                             "GPA",
                                             tarefa.getNome() + msg,
                                             R.drawable.logo_notificacao,
-                                            tarefa.getId(), //se for igual os extras nao atualizam
+                                            tarefa.getId(), //if equals the extras don't update it
                                             atvTarefa
                                     );
                                     Date hoje = new Date();
                                     Long diferenca = tarefa.getVencimento().getTime() - hoje.getTime();
                                     Log.i("diferença", String.valueOf(diferenca));
-                                    if (diferenca <= 432000000){ //5*24*60*60*1000 = 432000000 milisegundos (5 dias)
+                                    if (diferenca <= 432000000){ //5*24*60*60*1000 = 432000000 miliseconds (5 days)
                                         SimpleDateFormat formatoDataDiferenca = new SimpleDateFormat("dd", new Locale("pt", "BR"));
                                         Notificacao.create(this.getContexto(),
                                                 "GPA",
                                                 "-"+formatoDataDiferenca.format(diferenca)+" dias p/ vencimento: "+tarefa.getNome(),
                                                 R.drawable.logo_notificacao,
-                                                tarefa.getId(), //se for igual os extras nao atualizam
+                                                tarefa.getId(), //if equals the extras don't update it
                                                 atvTarefa
                                         );
                                     }
-                                    //sinaliza para a atvBase atualizar o listView
+                                    //flag to activity atvBase update the view
                                     AtvBase.atualizaListView = true;
                                 }
                             }
                         }
                     }
                 }
-                //faz a atualizaçao dos XML's baseando-se nas flags enviadas pelo webservice
+                //update the XML files according the flags sent by webservice
                 if (respostasSincroniza.get(1) != null) {
-                    //indice [1][0] contem flag para sincronizar XML tarefas pessoais
+                    //indice [1][0] contains flag to sync XML personal tasks
                     Boolean sincronizaPessoais = (Boolean) respostasSincroniza.get(1).get(0);
-                    //indice [1][1] contem flag para sincronizar XML tarefas equipes
+                    //indice [1][1] contains flag to sync XML team tasks
                     Boolean sincronizaEquipes = (Boolean) respostasSincroniza.get(1).get(1);
-                    //indice [1][2] contem flag para sincronizar XML tarefas hoje
+                    //indice [1][2] contains flag to sync XML today tasks
                     Boolean sincronizaHoje = (Boolean) respostasSincroniza.get(1).get(2);
-                    //indice [1][3] contem flag para sincronizar XML tarefas semana
+                    //indice [1][3] contains flag to sync XML week tasks
                     Boolean sincronizaSemana = (Boolean) respostasSincroniza.get(1).get(3);
-                    //indice [1][4] contem flag para sincronizar XML tarefas arquivadas
+                    //indice [1][4] contains flag to sync XML filed tasks
                     Boolean sincronizaArquivadas = (Boolean) respostasSincroniza.get(1).get(4);
                     if (sincronizaPessoais) {
                         XmlTarefasPessoais xmlTarefasPessoais = new XmlTarefasPessoais(this.getContexto());
@@ -175,7 +175,7 @@ public class ServicoTarefas extends Service implements Runnable{
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         }
-        //porque Deus quis assim...
+        //because God wants this way, do not ask me why!!!
         Handler refresh = new Handler(Looper.getMainLooper());
         refresh.post(new Runnable() {
             public void run(){
