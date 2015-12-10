@@ -17,8 +17,8 @@ import br.com.gpaengenharia.activities.AtvLogin;
 import br.com.gpaengenharia.classes.xmls.XmlTarefasHoje;
 
 /**
- Monta TreeMap de beans <Projeto, List<Tarefa>>
- herda de ProvedorDados e implementa ProvedorDadosInterface
+build TreeMap of beans <Projeto, List<Tarefa>>
+ inherit from ProvedorDados and implements ProvedorDadosInterface
   */
 public class ProvedorDadosTarefasHoje extends ProvedorDados implements ProvedorDadosInterface{
     private Context contexto;
