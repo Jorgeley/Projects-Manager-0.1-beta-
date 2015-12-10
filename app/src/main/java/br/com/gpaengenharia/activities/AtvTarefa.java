@@ -354,7 +354,7 @@ public class AtvTarefa extends FragmentActivity implements Listener, OnItemSelec
         tarefa.setNome(nome);
         tarefa.setDescricao(descricao);
         tarefa.setVencimento(vencimento);
-        //seted on 'onItemSelectedListener' mtehod
+        //seted on 'onItemSelectedListener' method
         if (this.usuario != null)
             tarefa.setUsuario(this.usuario);//delegation of task
         else
@@ -366,7 +366,7 @@ public class AtvTarefa extends FragmentActivity implements Listener, OnItemSelec
 
 
     /**
-     * save the task in background by webservice
+     * save the task by background webservice
      */
     private class GravaTarefaTask extends AsyncTask<Tarefa, Void, Boolean>{
         @Override
@@ -387,11 +387,11 @@ public class AtvTarefa extends FragmentActivity implements Listener, OnItemSelec
         @Override
         protected void onPostExecute(Boolean ok) {
             if (ok) {
-                Toast.makeText(AtvTarefa.this, "Tarefa Gravada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AtvTarefa.this, "Task saved", Toast.LENGTH_SHORT).show();
                 AtvBase.atualizaListView = true;
                 AtvTarefa.this.finish();
             }else
-                Toast.makeText(AtvTarefa.this, "Erro ao tentar gravar Tarefa", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AtvTarefa.this, "Error trying to save task", Toast.LENGTH_SHORT).show();
             Utils.barraProgresso(AtvTarefa.this, PrgTarefa, false);
         }
     }
@@ -402,7 +402,7 @@ public class AtvTarefa extends FragmentActivity implements Listener, OnItemSelec
      */
     private void conclui() {
         AlertDialog.Builder alerta = new AlertDialog.Builder(this);
-        alerta.setMessage("Confirma conclusao?");
+        alerta.setMessage("Confirm conclusion?");
         alerta.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             //confirm task done
             @Override
@@ -453,18 +453,18 @@ public class AtvTarefa extends FragmentActivity implements Listener, OnItemSelec
             if (resposta!=null) {
                 switch (resposta) {
                     case "concluida":
-                        Toast.makeText(AtvTarefa.this, "Tarefa concluida e arquivada!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AtvTarefa.this, "Task concluded and filed", Toast.LENGTH_SHORT).show();
                         break;
                     case "concluir":
                         Toast.makeText(AtvTarefa.this,
-                                "Foi solicitada a conclusao da tarefa.\n"
-                                        + "Aguarde confirmaçao do administrador.",
+                                "The administrator of the task will be notified about the conclusion.\n"
+                                        + "Wait for response.",
                                 Toast.LENGTH_SHORT)
                                 .show();
                         break;
                     case "rejeitada":
                         Toast.makeText(AtvTarefa.this,
-                                "O responsavel pela tarefa sera avisado da pendencia.",
+                                "The responsible of the task will be notified.",
                                 Toast.LENGTH_SHORT)
                                 .show();
                         break;
@@ -480,8 +480,8 @@ public class AtvTarefa extends FragmentActivity implements Listener, OnItemSelec
      */
     private void exclui(){
         AlertDialog.Builder alerta = new AlertDialog.Builder(this);
-        alerta.setMessage("Confirma exclusao? (nao podera ser desfeito)");
-        alerta.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+        alerta.setMessage("Confirm exclusion? (cannot be undone)");
+        alerta.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 ExcluiTarefaTask excluiTarefaTask = new ExcluiTarefaTask();
@@ -538,10 +538,10 @@ public class AtvTarefa extends FragmentActivity implements Listener, OnItemSelec
         protected void onPostExecute(final Boolean successo) {
             Utils.barraProgresso(AtvTarefa.this, PrgTarefa, false);
             if (successo) {
-                Toast.makeText(AtvTarefa.this, "tarefa excluida", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AtvTarefa.this, "task deleted", Toast.LENGTH_SHORT).show();
                 AtvTarefa.this.finish();
             }else
-                Toast.makeText(AtvTarefa.this, "erro ao tentar excluir a tarefa", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AtvTarefa.this, "error trying to delete the task", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -565,7 +565,7 @@ public class AtvTarefa extends FragmentActivity implements Listener, OnItemSelec
         comentario.show();
     }
 
-    /**add comment and task by foreground webservice
+    /**add comment and task by background webservice
      * @param dialogInterface
      * @param i
      */
@@ -579,7 +579,7 @@ public class AtvTarefa extends FragmentActivity implements Listener, OnItemSelec
     }
 
     /**
-     * Class responsible for add the comment in foreground
+     * Class responsible for add the comment in background
      */
     public class ComentarioTask extends AsyncTask<String, Void, Boolean> {
         @Override
