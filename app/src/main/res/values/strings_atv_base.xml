@@ -2,17 +2,17 @@
 <resources>
 
     <!-- opções do menu-->
-    <string name="menu_novatarefa">+Tarefa</string>
-    <string name="menu_projetos">Projetos</string>
-        <string name="submenu_pessoais">Pessoais</string>
-        <string name="submenu_equipe">Equipe</string>
-        <string name="submenu_hoje">Hoje</string>
-        <string name="submenu_semana">Semana</string>
-    <string name="menu_agrupamento">Agrupamento</string>
-        <string name="submenu_tarefa">Tarefas</string>
-        <string name="submenu_projeto">Projetos</string>
-    <string name="menu_conf">Configurações</string>
-    <string name="menu_arquivo">Arquivo</string>
-    <string name="menu_sobre">Sobre</string>
+    <string name="menu_novatarefa">+Task</string>
+    <string name="menu_projetos">Projects</string>
+        <string name="submenu_pessoais">Personal</string>
+        <string name="submenu_equipe">Team</string>
+        <string name="submenu_hoje">Today</string>
+        <string name="submenu_semana">Week</string>
+    <string name="menu_agrupamento">Group by</string>
+        <string name="submenu_tarefa">Task</string>
+        <string name="submenu_projeto">Projects</string>
+    <string name="menu_conf">Configurations</string>
+    <string name="menu_arquivo">File</string>
+    <string name="menu_sobre">About</string>
 
 </resources>
