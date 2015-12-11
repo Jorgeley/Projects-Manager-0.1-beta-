@@ -1,10 +1,10 @@
 package br.com.gpaengenharia.classes.xmls;
 
-/** interface para as classes filhas de Xml */
+/** interface used by children of Xml class */
 public interface XmlInterface {
 
-    /** seta o arquivo XML de saída para gravar */
+    /** set the XML file to save */
     public abstract void setArquivoXML();
-    /** seta o nome do arquivo XML para gravar */
+    /** set the name of XML file to save */
     public abstract void setNomeArquivoXML();
 }
