@@ -5,7 +5,7 @@ import java.io.IOException;
 import br.com.gpaengenharia.classes.WebService;
 
 /**
- * Calls the webservice method that returns the XML file for team
+ * Calls the webservice method that returns the XML for team
  */
 public class XmlEquipe extends Xml implements XmlInterface {
 
