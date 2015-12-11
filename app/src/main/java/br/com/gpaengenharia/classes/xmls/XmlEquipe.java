@@ -5,7 +5,7 @@ import java.io.IOException;
 import br.com.gpaengenharia.classes.WebService;
 
 /**
- * Chama o metodo do Webservice que retorna o XML das das equipes
+ * Calls the webservice method that returns the XML file for team
  */
 public class XmlEquipe extends Xml implements XmlInterface {
 
@@ -14,7 +14,7 @@ public class XmlEquipe extends Xml implements XmlInterface {
         setNomeArquivoXML();
     }
 
-    //nome do arquivo para gravar o xml
+    //file name to save
     private final static String nomeArquivoXML = "equipes.xml";
 
     public static String getNomeArquivoXML() {
@@ -33,13 +33,13 @@ public class XmlEquipe extends Xml implements XmlInterface {
     }
 
     /**
-     * Faz download do XML via webservice e salva localmente
-     * @return true: houve atualizaçao, false: nao houve atualizaçao
+     * download the XML by webservice and save localy
+     * @return true: there is update, false: there is no update
      * @throws java.io.IOException
      */
     public static boolean criaXmlEquipesWebservice(boolean forcarAtualizacao) throws IOException {
         /**
-         * TODO nao deixar o webservice ser chamado sem restricao
+         * TODO do not let the webservice be called without restrictions
          */
         WebService webService = new WebService();
         webService.setForcarAtualizacao(forcarAtualizacao);
@@ -52,7 +52,7 @@ public class XmlEquipe extends Xml implements XmlInterface {
     }
 
     /**
-     * Reescreve o arquivo XML passado como parametro
+     * Rewrite the XML file passed by parameter
      * @param xml
      * @throws java.io.IOException
      */
