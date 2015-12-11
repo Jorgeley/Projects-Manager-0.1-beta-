@@ -12,7 +12,7 @@ import br.com.gpaengenharia.activities.AtvLogin;
 import br.com.gpaengenharia.classes.WebService;
 
 /**
- * Chama o metodo do Webservice que retorna o XML dos usuarios
+ * Calls the webservice method that returns the users XML
  */
 public class XmlUsuario extends Xml implements XmlInterface {
     private static String ultimaSincronizacao;
@@ -22,11 +22,11 @@ public class XmlUsuario extends Xml implements XmlInterface {
         setNomeArquivoXML();File arquivo = new File(contexto.getFilesDir() + "/" + this.getNomeArquivoXML());
         SimpleDateFormat formatoData = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", new Locale("pt", "BR"));
         Date data = new Date();
-        data.setTime(arquivo.lastModified());//pega a data de modificaçao do arquivo XML
+        data.setTime(arquivo.lastModified());//get time modification of file
         this.ultimaSincronizacao = formatoData.format(data);
     }
 
-    //nome do arquivo para gravar o xml
+    //name of the file to save XML
     private final static String nomeArquivoXML = "usuarios.xml";
 
     public static String getNomeArquivoXML() {
@@ -45,13 +45,14 @@ public class XmlUsuario extends Xml implements XmlInterface {
     }
 
     /**
-     * Faz download do XML via webservice e salva localmente
-     * @return true: houve atualizaçao, false: nao houve atualizaçao
+      * downloads the XML by webservice and save localy
+     * @param usuario
+     * @return true: there is update, false: there is no update
      * @throws java.io.IOException
      */
     public boolean criaXmlUsuariosWebservice(boolean forcarAtualizacao) throws IOException {
         /**
-         * TODO nao deixar o webservice ser chamado sem restricao
+         * TODO do not let the webservice be called without restrictions
          */
         WebService webService = new WebService();
         webService.setForcarAtualizacao(forcarAtualizacao);
@@ -65,7 +66,7 @@ public class XmlUsuario extends Xml implements XmlInterface {
     }
 
     /**
-     * Reescreve o arquivo XML passado como parametro
+     * rewrite the XML passed by parameter
      * @param xml
      * @throws java.io.IOException
      */
