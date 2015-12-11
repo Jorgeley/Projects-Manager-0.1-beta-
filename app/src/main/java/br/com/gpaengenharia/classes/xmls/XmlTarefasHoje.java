@@ -10,7 +10,7 @@ import br.com.gpaengenharia.beans.Usuario;
 import br.com.gpaengenharia.classes.WebService;
 
 /**
- * Calls the webservice method that returns the XML file for today tasks
+ * Calls the webservice method that returns the XML for today tasks
  */
 public class XmlTarefasHoje extends Xml implements XmlInterface{
 
