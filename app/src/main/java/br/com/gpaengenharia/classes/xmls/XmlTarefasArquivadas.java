@@ -12,7 +12,7 @@ import br.com.gpaengenharia.beans.Usuario;
 import br.com.gpaengenharia.classes.WebService;
 
 /**
- * Chama o metodo do Webservice que retorna o XML das tarefas arquivadas (concluidas)
+ * Calls the webservice method that returns the XML file for filed tasks (concluded)
  */
 public class XmlTarefasArquivadas extends Xml implements XmlInterface{
 
@@ -21,7 +21,7 @@ public class XmlTarefasArquivadas extends Xml implements XmlInterface{
         setNomeArquivoXML();
     }
 
-    //nome do arquivo para gravar o xml
+    //name of the file to save XML
     private final static String nomeArquivoXML = "tarefasArquivadas.xml";
 
     public static String getNomeArquivoXML() {
@@ -41,14 +41,14 @@ public class XmlTarefasArquivadas extends Xml implements XmlInterface{
     }
 
     /**
-     * Faz download do XML via webservice e salva localmente
+     * downloads the XML by webservice and save localy
      * @param usuario
-     * @return true: houve atualizaçao, false: nao houve atualizaçao
+     * @return true: there is update, false: there is no update
      * @throws IOException
      */
     public static boolean criaXmlTarefasArquivadasWebservice(Usuario usuario, boolean forcarAtualizacao) throws IOException {
         /**
-         * TODO nao deixar o webservice ser chamado sem restricao
+         * TODO do not let the webservice be called without restrictions
          */
         WebService webService = new WebService();
         webService.setUsuario(usuario);
@@ -62,8 +62,8 @@ public class XmlTarefasArquivadas extends Xml implements XmlInterface{
     }
 
     /**
-     * Reescreve o arquivo XML passado como parametro, esse metodo e usado pelo Dialog
-     * 'gravar comentario' na 'AtvTarefa'
+     * rewrite the XML passed by parameter, this method is used by
+     * 'gravar comentario' method on activity 'AtvTarefa'
      * @param xml
      * @throws IOException
      */
@@ -72,7 +72,7 @@ public class XmlTarefasArquivadas extends Xml implements XmlInterface{
     }
 
     /**
-    Cria XML exemplo e grava no dir do projeto
+    create a xml file and save on directory project
      */
     public void criaXmlTarefasArquivadasTeste() {
         try {
