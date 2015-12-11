@@ -12,7 +12,7 @@ import br.com.gpaengenharia.beans.Usuario;
 import br.com.gpaengenharia.classes.WebService;
 
 /**
- * Calls the webservice method that returns the XML file for filed tasks (concluded)
+ * Calls the webservice method that returns the XML for filed tasks (concluded)
  */
 public class XmlTarefasArquivadas extends Xml implements XmlInterface{
 
