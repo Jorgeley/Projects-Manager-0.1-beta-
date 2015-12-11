@@ -13,7 +13,7 @@ import br.com.gpaengenharia.activities.AtvLogin;
 import br.com.gpaengenharia.classes.WebService;
 
 /**
- * Calls the webservice method that returns the XML file for projects
+ * Calls the webservice method that returns the projects XML
  */
 public class XmlProjeto extends Xml implements XmlInterface {
     private static String ultimaSincronizacao;
