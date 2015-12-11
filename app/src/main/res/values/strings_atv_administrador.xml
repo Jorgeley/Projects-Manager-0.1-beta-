@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="titulo_atv_administrador">" "</string>
-    <string name="actionbar_novoprojeto">+projeto</string>
-    <string name="menu_gerenciar">gerenciar</string>
-        <string name="gerenciar_usuarios">usuários</string>
-        <string name="gerenciar_equipes">equipes</string>
+    <string name="actionbar_novoprojeto">+project</string>
+    <string name="menu_gerenciar">manage</string>
+        <string name="gerenciar_usuarios">users</string>
+        <string name="gerenciar_equipes">teams</string>
 </resources>
