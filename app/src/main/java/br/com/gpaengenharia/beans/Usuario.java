@@ -6,12 +6,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Bean Usuario
+ * User Bean
  */
 public class Usuario implements Comparable, Parcelable {
     private int id;
     private String nome;
-    private String perfil;//TODO arumar esse gato
+    private String perfil;//TODO fix this COP (Cat Oriented Programming)
     private Set<Equipe> equipes;
 
     public int getId() {
